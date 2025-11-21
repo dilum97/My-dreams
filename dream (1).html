@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dream Diary</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url('dream.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 40, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: black;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #9370db, #b19cd9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      color: Black;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: fadeInUp 1s ease;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: black;
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #d8b9f5;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #9370db;
+      box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #9370db, #b19cd9);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(147, 112, 219, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(147, 112, 219, 0.6);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .dreams-list {
+      margin-top: 20px;
+    }
+
+    .dream-item {
+      background: linear-gradient(135deg, rgba(147, 112, 219, 0.1), rgba(177, 156, 217, 0.1));
+      border-left: 4px solid #9370db;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .dream-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(147, 112, 219, 0.2);
+    }
+
+    .dream-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .dream-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #6a4c93;
+    }
+
+    .dream-date {
+      color: #9370db;
+      font-size: 0.9em;
+    }
+
+    .dream-description {
+      color: #555;
+      line-height: 1.6;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+    }
+
+    .delete-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(238, 90, 111, 0.4);
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+      animation: slideIn 0.5s ease;
+    }
+
+    .success {
+      background: linear-gradient(135deg, #51cf66, #40c057);
+      color: white;
+    }
+
+    .error {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      color: white;
+    }
+
+    .loading {
+      text-align: center;
+      color: #9370db;
+      font-size: 1.2em;
+      padding: 20px;
+    }
+
+    .setup-warning {
+      background: linear-gradient(135deg, #ffd93d, #ffb700);
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid #ff9100;
+      display: none;
+    }
+
+    .setup-warning strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .dream-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  
+  <div class="container">
+    <div class="card">
+      <div class="header" style="margin-bottom: 30px;">
+        <h1>✨ My Dream Diary ✨</h1>
+        <p>සිහින ලියන්න, මතක තියාගන්න</p>
+      </div>
+      </div>
+      
+      <h2 style="color: #6a4c93; margin-bottom: 20px;">නව සිහිනයක් එකතු කරන්න</h2>
+      
+      <div id="messageDiv"></div>
+
+      <form id="dreamForm">
+        <div class="form-group">
+          <label for="dreamDate">දිනය</label>
+          <input type="date" id="dreamDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="dreamTitle">සිහිනයේ මාතෘකාව</label>
+          <input type="text" id="dreamTitle" placeholder="උදා: අහසේ පියාඹන සිහිනය" required>
+        </div>
+
+        <div class="form-group">
+          <label for="dreamDescription">සිහිනය විස්තර කරන්න</label>
+          <textarea id="dreamDescription" placeholder="ඔබේ සිහිනය මෙහි ලියන්න..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">💫 සුරකින්න</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 style="color: #6a4c93; margin-bottom: 20px;">මගේ සිහින</h2>
+      <div id="dreamsList" class="dreams-list">
+        <div class="loading">සිහින පූරණය වෙමින්...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ මෙතන ඔයාගේ Apps Script Web App URL එක දාන්න
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6vr6TM-4PLom4CAlud5n2srQnRJfO-xInA0XoeNzbnlUmCimyL1x3_fh3IrTOib12oQ/exec';
+
+    // Set today's date as default
+    document.getElementById('dreamDate').valueAsDate = new Date();
+
+    // Load dreams on page load
+    window.onload = function() {
+      loadDreams();
+    };
+
+    // Form submission
+    document.getElementById('dreamForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '💫 සුරකිමින්...';
+      
+      const dreamData = {
+        action: 'save',
+        date: document.getElementById('dreamDate').value,
+        title: document.getElementById('dreamTitle').value,
+        description: document.getElementById('dreamDescription').value
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL + '?' + new URLSearchParams(dreamData));
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('සිහිනය සාර්ථකව සුරකින ලදී! ✨', 'success');
+          document.getElementById('dreamForm').reset();
+          document.getElementById('dreamDate').valueAsDate = new Date();
+          loadDreams();
+        } else {
+          showMessage('දෝෂයක්: ' + result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('දෝෂයක් සිදු විය. කරුණාකර නැවත උත්සහ කරන්න.', 'error');
+        console.error('Error:', error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💫 සුරකින්න';
+      }
+    });
+
+    // Load dreams
+    async function loadDreams() {
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=load');
+        const result = await response.json();
+        
+        if (result.success) {
+          displayDreams(result.dreams);
+        } else {
+          document.getElementById('dreamsList').innerHTML = 
+            '<div class="error">දෝෂයක්: ' + result.message + '</div>';
+        }
+      } catch (error) {
+        document.getElementById('dreamsList').innerHTML = 
+          '<div class="error">සිහින load කිරීමේදී දෝෂයක් සිදු විය</div>';
+        console.error('Error:', error);
+      }
+    }
+
+    // Display dreams
+    function displayDreams(dreams) {
+      const dreamsList = document.getElementById('dreamsList');
+      
+      if (!dreams || dreams.length === 0) {
+        dreamsList.innerHTML = '<p style="text-align: center; color: #999;">තවම සිහින නැත. ඔබේ පළමු සිහිනය එකතු කරන්න! 🌙</p>';
+        return;
+      }
+
+      dreamsList.innerHTML = '';
+      
+      // Show newest first
+      dreams.reverse().forEach(function(dream, index) {
+        const dreamItem = document.createElement('div');
+        dreamItem.className = 'dream-item';
+        
+        const actualIndex = dreams.length - 1 - index;
+        
+        dreamItem.innerHTML = `
+          <div class="dream-header">
+            <div>
+              <div class="dream-title">${escapeHtml(dream.title)}</div>
+              <div class="dream-date">📅 ${formatDate(dream.date)}</div>
+            </div>
+            <button class="delete-btn" onclick="deleteDream(${actualIndex})">🗑️ මකන්න</button>
+          </div>
+          <div class="dream-description">${escapeHtml(dream.description)}</div>
+        `;
+        
+        dreamsList.appendChild(dreamItem);
+      });
+    }
+
+    // Delete dream
+    async function deleteDream(index) {
+      if (!confirm('ඔබට මෙම සිහිනය මකා දැමීමට අවශ්‍යද?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=delete&index=' + index);
+        const result = await response.json();
+        
+        if (result.success) {
+          showMessage('සිහිනය මකා දමන ලදී', 'success');
+          loadDreams();
+        } else {
+          showMessage('දෝෂයක්: ' + result.message, 'error');
+        }
+      } catch (error) {
+        showMessage('දෝෂයක් සිදු විය', 'error');
+        console.error('Error:', error);
+      }
+    }
+
+    // Show message
+    function showMessage(message, type) {
+      const messageDiv = document.getElementById('messageDiv');
+      messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+      
+      setTimeout(function() {
+        messageDiv.innerHTML = '';
+      }, 3000);
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('si-LK', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+
+    // Escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
